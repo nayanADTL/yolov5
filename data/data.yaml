@@ -1,0 +1,9 @@
+path: "../Dataset/" # Path relative to the `train.py` script. 
+train: images/train/ 
+val: images/val/ 
+
+# Classes
+nc: 6
+names: [
+    "Humans", "Vehicles", "AFV_Tanks", "B_Vehicles", "Helipad", "FOL_Dumps"
+] 
