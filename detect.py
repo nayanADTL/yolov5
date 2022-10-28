@@ -61,8 +61,8 @@ from tools.networking import createUDPLink
 
 class Classifier:  # Classifier class used for initializing aerial human detection model and all other necessary dependencies.
 
-    #--#fov_x = 73.387
-    #--#fov_y = 45.462
+    fov_x = 73.387
+    fov_y = 45.462
 
     def __init__(self, id, simulation):
         self.id = int(id)
@@ -141,7 +141,7 @@ class Classifier:  # Classifier class used for initializing aerial human detecti
 
         # Dataloader
         if webcam:
-            view_img = check_imshow()
+            # view_img = check_imshow()
             cudnn.benchmark = True  # set True to speed up constant image size inference
             dataset = LoadStreams(source, img_size=imgsz, stride=stride, auto=pt)
             bs = len(dataset)  # batch_size
@@ -257,7 +257,7 @@ class Classifier:  # Classifier class used for initializing aerial human detecti
                                 x2 = xywh[0] + xywh[2] / 2  # bottom right x
                                 y2 = xywh[1] + xywh[3] / 2  # bottom right y
                                 
-                                # lat, lon = compute_gps(xywh[0], xywh[1], Classifier.fov_x, Classifier.fov_y, avg_pos, im0.shape)
+                                lat, lon = compute_gps(xywh[0], xywh[1], Classifier.fov_x, Classifier.fov_y, avg_pos, im0.shape)
                                 # print('lat and lon',lat, lon)
 
                                 
@@ -266,8 +266,8 @@ class Classifier:  # Classifier class used for initializing aerial human detecti
                                 # print(tag_json)
                                 # Generating the json using the x1,y1 (top left) and x2,y2 (bottom right) of the bounding box
                                 # To map the x1,y1 and x2,y2 values (between 0 and 1) to absolute coodinators using: x1=x1*im0.shape[1] or y1=y1*im0.shape[0]
-                                # tag_json = {'lbl':int(cls.item()), 'Acc.': int(conf.item()*100), 'loc':[lat, lon], 'x1,y1': [x1,y1], 'x2,y2': [x2,y2]}
-                                tag_json = {'lbl':int(cls.item()), 'Acc.': int(conf.item()*100), 'x1,y1': [x1,y1], 'x2,y2': [x2,y2]}
+                                tag_json = {'lbl':int(cls.item()), 'Acc.': int(conf.item()*100), 'loc':[lat, lon], 'x1,y1': [x1,y1], 'x2,y2': [x2,y2]}
+                                # tag_json = {'lbl':int(cls.item()), 'Acc.': int(conf.item()*100), 'x1,y1': [x1,y1], 'x2,y2': [x2,y2]}
                                 print(tag_json)
                                 tag_list.append(tag_json)
 
