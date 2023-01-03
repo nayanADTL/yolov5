@@ -88,11 +88,11 @@ class Classifier:  # Classifier class used for initializing aerial human detecti
             data, #=ROOT / 'data/data.yaml',  # dataset.yaml path
             showPred, #=True, #For printing the predictions
             sendPred, #=True, #For sending the tags
-            conf_thres=0.25,  # confidence threshold
+            conf_thres=0.35,  # confidence threshold
             iou_thres=0.45,  # NMS IOU threshold
             max_det=1000,  # maximum detections per image
             device='',  # cuda device, i.e. 0 or 0,1,2,3 or cpu
-            save_crop=False,  # save cropped prediction boxes
+            save_crop=True,  # save cropped prediction boxes
             nosave=False,  # do not save images/videos
             classes=None,  # filter by class: --class 0, or --class 0 2 3
             agnostic_nms=False,  # class-agnostic NMS
@@ -120,7 +120,7 @@ class Classifier:  # Classifier class used for initializing aerial human detecti
         
         # is_file = Path(source).suffix[1:] in (IMG_FORMATS + VID_FORMATS)
         
-        is_url = source.lower().startswith(('rtsp://', 'rtmp://', 'http://', 'https://'))
+        is_url = source.lower().startswith(('rtsp://', 'rtmp://', 'http://', 'https://', 'rtspsrc'))
         webcam = source.isnumeric() or source.endswith('.txt') or (is_url)
         # print(webcam)
         #if is_url:
@@ -313,11 +313,17 @@ class Classifier:  # Classifier class used for initializing aerial human detecti
                             #     [],
                             #       }
                             if len(tag_list) !=0:
-                                js= {}
+                                js={}
                                 js["tag"]=tag_list
                                 pkt = json.dumps(js).encode("UTF-8")
                                 # print('Printing the tags')
                                 # print(pkt)
+                                swarm_tx_sock.sendto(pkt, self.swarm_tx_addr) #10002
+                            else:
+                                tag_list = []
+                                js={}
+                                js["tag"]=tag_list
+                                pkt = json.dumps(js).encode("UTF-8")
                                 swarm_tx_sock.sendto(pkt, self.swarm_tx_addr) #10002
                         except Exception as err:
                             print("[Swarm][Error] Data not sent to Swarm: " + str(err))
